@@ -16,6 +16,7 @@ public class UIbtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public Transform lightmain;
     public Slider sliderX;
     public Slider sliderY;
+    public cameramain camerscript;
 
     void Start ()
     {
@@ -36,7 +37,7 @@ public class UIbtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         helpText = Instantiate(explanTemplate);
         helpText.transform.SetParent(this.transform, false);
         helpText.transform.GetChild(0).GetComponent<Text>().text = explanation;
-        helpText.GetComponent<RectTransform>().sizeDelta = new Vector2((float)explanation.Length % 10 * 26, Mathf.Ceil((float)explanation.Length / 10) * 25);
+        helpText.GetComponent<RectTransform>().sizeDelta = new Vector2(Mathf.Clamp(explanation.Length,0,10) * 21, Mathf.Ceil((float)explanation.Length / 10) * 30);
         helpText.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = helpText.GetComponent<RectTransform>().sizeDelta;
         helpText.SetActive(false);
     }
@@ -57,7 +58,9 @@ public class UIbtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (count == num - 1)
             count %= (num - 1);
         DestroyImmediate(objCtrl[count]);
-        objCtrl[count] = Instantiate(crtObj, new Vector3(count * 15f, 2.5f, 0), Quaternion.Euler(0, 195f, 0)); ;
+        objCtrl[count] = Instantiate(crtObj, new Vector3(count * 15f, 2.5f, 0), Quaternion.Euler(0, 195f, 0));
+        cameramain.Target = objCtrl[count].transform.GetChild(0).transform;
+        camerscript.cameractrl(false);
         count += 1;
     }
     public void lightCtrlSlider(int isY)//Slider控制燈光

@@ -33,7 +33,7 @@ public class cameramain : MonoBehaviour
         if (doubleClick.isMouse && (doubleClick.clickCount == 2))
             Focus();
     }
-    private void cameractrl(bool mode)//攝影機環繞
+    public void cameractrl(bool mode)//攝影機環繞
     {
         mouseX += Input.GetAxis("Mouse X") * sensitivityMouse * Time.deltaTime;
         mouseY -= Input.GetAxis("Mouse Y") * sensitivityMouse * Time.deltaTime;
