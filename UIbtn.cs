@@ -7,12 +7,11 @@ using UnityEngine.EventSystems;
 public class UIbtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     private const int num = 10;
+    private const int numpanel = 4;
+    private int count = 1;
+    private GameObject[] panelCtrl = new GameObject[numpanel];
     public static GameObject[] objCtrl = new GameObject[num];
     public static bool isOnui = false;
-    public string explanation;
-    public GameObject explanTemplate;
-    private GameObject helpText;
-    private int count = 1;
     public Transform lightmain;
     public Slider sliderX;
     public Slider sliderY;
@@ -21,36 +20,36 @@ public class UIbtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     void Start ()
     {
         objCtrl[0]= GameObject.Find("SportCar");
-        if (GetComponent<Button>() != null)
-            GetComponent<Button>().onClick.AddListener(delegate { btnExpand(transform); });
-        helpUser();
+        panelCreate();
     }
-    public void btnExpand(Transform btn)//面板開關控制
+    public void btnExpand(int i)//面板開關控制
     {
-        if (btn.GetChild(0).gameObject.activeSelf)
-            btn.GetChild(0).gameObject.SetActive(false);
+        if (panelCtrl[i].activeSelf)
+            panelCtrl[i].SetActive(false);
         else
-            btn.GetChild(0).gameObject.SetActive(true);
+        {
+            for (int j = 1; j < numpanel; j++)
+            {
+                panelCtrl[j].SetActive(false);
+            }
+            panelCtrl[i].SetActive(true);
+        }
     }
-    public void helpUser()//使用說明文字框建立
+    private void panelCreate()//要展開的選單載入陣列，以便控制開關
     {
-        helpText = Instantiate(explanTemplate);
-        helpText.transform.SetParent(this.transform, false);
-        helpText.transform.GetChild(0).GetComponent<Text>().text = explanation;
-        helpText.GetComponent<RectTransform>().sizeDelta = new Vector2(Mathf.Clamp(explanation.Length,0,10) * 21, Mathf.Ceil((float)explanation.Length / 10) * 30);
-        helpText.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = helpText.GetComponent<RectTransform>().sizeDelta;
-        helpText.SetActive(false);
+        for (int i = 0; i < numpanel; i++)
+        {
+            panelCtrl[i] = GameObject.Find("panel0" + i.ToString());
+        }
+        foreach (GameObject panelObj in panelCtrl)
+            panelObj.SetActive(false);
     }
     public void OnPointerEnter(PointerEventData eventData)//滑鼠移入
     {
-        helpText.SetActive(true);
-        //說明文字位置調整
-        helpText.transform.position = new Vector3(Input.mousePosition.x - helpText.GetComponent<RectTransform>().rect.width / 2, Input.mousePosition.y - helpText.GetComponent<RectTransform>().rect.height / 2, 0);
         isOnui = true;
     }
     public void OnPointerExit(PointerEventData eventData)//滑鼠移出
     {
-        helpText.SetActive(false);
         isOnui = false;
     }
     public void createObj(GameObject crtObj)//建立新物件
